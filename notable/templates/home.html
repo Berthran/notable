@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Welcome to Notable</h1>
+<p>Notable is a simple note-taking app that allows you to take notes and store them for later use.</p>
+<!-- <p>Click <a href="/register">here</a> to register for an account.</p>
+<p>Click <a href="/login">here</a> to login to your account.</p> -->
+<ul>
+    {% for allNote in allNotes %}
+    <li>
+        <h2>{{ allNote.title }}</h2>
+        <p>{{ allNote.content }}</p>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

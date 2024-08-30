@@ -2,30 +2,50 @@
 Handles the different component routes
 '''
 from flask import Flask, render_template
+from notable.forms import RegistrationForm, LoginForm
+from notable import app
 
-
-app = Flask(__name__)
-
+allNotes = [
+    {
+        'id': 1,
+        'title': 'First Note',
+        'content': 'This is the first note'
+    },
+    {
+        'id': 2,
+        'title': 'Second Note',
+        'content': 'This is the second note'
+    },
+    {
+        'id': 3,
+        'title': 'Third Note',
+        'content': 'This is the third note'
+    }
+]
 
 @app.route('/', strict_slashes=False)
 @app.route('/home', strict_slashes=False)
 def homepage():
     ''' Shows the homepage '''
-    return ('Home Page')
+    return render_template('home.html', allNotes=allNotes, title="Home")
+    # return 'Home page'
 
 
 @app.route('/register', methods=['GET', 'POST'], strict_slashes=False)
-def registration():
+def register():
     ''' Handles user registration '''
-    # return render_template('registration.html')
-    return 'Registration page'
+    # Create an instance of the registration form
+    form = RegistrationForm()
+    return render_template('registration.html', title="Register", form=form)
+    
 
 
 @app.route('/login', methods=['GET', 'POST'], strict_slashes=False)
 def login():
     ''' Handles user login '''
-    # return render_template('login.html')
-    return 'Login page'
+    # Create an instance of the login form
+    form = LoginForm()
+    return render_template('login.html')
 
 
 @app.route('/logout', strict_slashes=False)
@@ -127,12 +147,3 @@ def delete_report(report_id):
 # def notifications():
 #     ''' Handles user notifications '''
 #     return 'Notifications page'
-
-
-
-if __name__ == "__main__":
-    app.run(debug=True, port=5000,
-            host='0.0.0.0',
-            threaded=True,
-            use_reloader=True,
-            use_debugger=True)
