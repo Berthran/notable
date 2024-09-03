@@ -25,7 +25,7 @@ allNotes = [
 
 @app.route('/', strict_slashes=False)
 @app.route('/home', strict_slashes=False)
-def homepage():
+def home():
     ''' Shows the homepage '''
     return render_template('home.html', allNotes=allNotes, title="Home")
     # return 'Home page'
