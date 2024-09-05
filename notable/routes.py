@@ -9,7 +9,7 @@ allNotes = [
     {
         'id': 1,
         'title': 'First Note',
-        'content': 'This is the first note',
+        'content': "I decree by the word of the Lord that I am no debtor to the flesh to walk after the flesh. Body you are not my master neither am I your slave therefore by the Spirit of the Lord I decree your deeds mortified and destroyed in me. (Rom 8:12,13). \nHave mercy on me oh Lord and bring to a halt every activity distracting me from the path you want me to follow.",
         'date_posted': 'April 20, 2021'
     },
     {
@@ -28,6 +28,7 @@ allNotes = [
 
 @app.route('/', strict_slashes=False)
 @app.route('/home', strict_slashes=False)
+# @loginrequired
 def home():
     ''' Shows the homepage '''
     return render_template('home.html', allNotes=allNotes, title="Home")
@@ -48,7 +49,7 @@ def login():
     ''' Handles user login '''
     # Create an instance of the login form
     form = LoginForm()
-    return render_template('login.html')
+    return render_template('login.html', title="Login", form=form)
 
 
 @app.route('/logout', strict_slashes=False)
