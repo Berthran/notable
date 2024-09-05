@@ -1,8 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1>Welcome to Notable</h1>
-<p>Notable is a simple note-taking app that allows you to take notes and store them for later use.</p>
-<ul>
+
+<ul class="notelist">
     {% for allNote in allNotes %}
     <article class="media content-section">
         <div class="media-body">
