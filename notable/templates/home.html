@@ -6,10 +6,7 @@
     {% for allNote in allNotes %}
     <article class="media content-section">
         <div class="media-body">
-        <div class="article-metadata">
-            <small class="text-muted">{{ allNote.date_posted }}</small>
-        </div>
-        <h2><a class="article-title" href="#">{{ allNote.title }}</a></h2>
+        <h3><a class="article-title" href="#">{{ allNote.title }}</a></h3>
         <p class="article-content">{{ allNote.content }}</p>
         </div>
     </article>
