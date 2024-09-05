@@ -33,19 +33,25 @@
 			  </div>
 			</nav>
 		  </header>
-          <main role="main" class="container">
+          <main role="main" class="container notearea">
 			<div class="row">
-			  <div class="col-md-8">
-				{% with messages = get_flashed_messages(with_categories=true)  %}
-					{% if messages %}
-						{% for category, message in messages %}
-							<div class="alert alert-{{ category }}">
-								{{ message }}
-							</div>
-						{% endfor %}
-					{% endif %}
-				{% endwith %}
-				{% block content %}{% endblock %}
+				{% block col_length %}
+				<div class="col-md-12">
+				{% endblock %}
+
+					{% with messages = get_flashed_messages(with_categories=true)  %}
+						{% if messages %}
+							{% for category, message in messages %}
+								<div class="alert alert-{{ category }}">
+									{{ message }}
+								</div>
+							{% endfor %}
+						{% endif %}
+					{% endwith %}
+
+					{% block content %}
+					<!-- Page specific content -->
+					{% endblock %}
 			  </div>
 		  </main>
         
