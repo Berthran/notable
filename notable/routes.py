@@ -36,7 +36,7 @@ def register():
     ''' Handles user registration '''
     # Create an instance of the registration form
     form = RegistrationForm()
-    return render_template('registration.html', title="Register", form=form)
+    return render_template('register.html', title="Register", form=form)
     
 
 
