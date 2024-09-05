@@ -2,24 +2,27 @@
 Handles the different component routes
 '''
 from flask import Flask, render_template
-from notable.forms import RegistrationForm, LoginForm
+from notable.forms import RegistrationForm, LoginForm, NoteForm
 from notable import app
 
 allNotes = [
     {
         'id': 1,
         'title': 'First Note',
-        'content': 'This is the first note'
+        'content': 'This is the first note',
+        'date_posted': 'April 20, 2021'
     },
     {
         'id': 2,
         'title': 'Second Note',
-        'content': 'This is the second note'
+        'content': 'This is the second note',
+        'date_posted': 'April 21, 2021'
     },
     {
         'id': 3,
         'title': 'Third Note',
-        'content': 'This is the third note'
+        'content': 'This is the third note',
+        'date_posted': 'April 22, 2021'
     }
 ]
 
@@ -36,7 +39,7 @@ def register():
     ''' Handles user registration '''
     # Create an instance of the registration form
     form = RegistrationForm()
-    return render_template('registration.html', title="Register", form=form)
+    return render_template('register.html', title="Register", form=form)
     
 
 
@@ -66,19 +69,24 @@ def notes():
     return 'All Notes page'
 
 
-@app.route('/new_note', strict_slashes=False)
+@app.route('/new_note', strict_slashes=False) # For the create note button
 def new_note():
     ''' Handles new note creation '''
     return 'New Note page'
 
+@app.route('/note/<int:note_id>/<int:task_id>/guidelines', strict_slashes=False)
+def guidelines(note_id, task_id):
+    ''' Handles the guidelines view'''
+    return ' Guideline Page'
 
-@app.route('/note/<int:note_id>', strict_slashes=False)
+# No automatic editing on viewing a note
+@app.route('/note/<int:note_id>', strict_slashes=False) # Tap on note to view. Disables automatic edit
 def view_note(note_id):
     ''' Handles note view '''
     return 'View Note page'
 
 
-@app.route('/note/<int:note_id>/edit', strict_slashes=False)
+@app.route('/note/<int:note_id>/edit', strict_slashes=False) # Click on edit icon
 def edit_note(note_id):
     ''' Handles note edit '''
     return 'Edit Note page'
@@ -115,7 +123,6 @@ def edit_report(report_id):
 def delete_report(report_id):
     ''' Handles report delete '''
     return 'Delete Report page'
-
 
 
 # @app.note('/profile/edit', strict_slashes=False)

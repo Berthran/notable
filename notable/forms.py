@@ -11,11 +11,11 @@ class RegistrationForm(FlaskForm):
     '''
     Form for user registration
     '''
-    first_name = StringField('First_Name', validators=[DataRequired(), Length(min=2, max=20)])
-    last_name = StringField('Last_Name', validators=[DataRequired(), Length(min=2, max=20)])
+    firstName = StringField('FirstName', validators=[DataRequired(), Length(min=2, max=20)])
+    lastName = StringField('LastName', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    confirmPassword = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
 
 
@@ -25,7 +25,7 @@ class RegistrationForm(FlaskForm):
         Validates the user provided email
         '''
         # Check if the email already exists
-        user = User.query.fileter_by(email=email.data).first()
+        user = User.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('An account witht this email already exists. Login or use a different email.')
 

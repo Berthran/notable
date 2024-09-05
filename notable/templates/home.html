@@ -6,10 +6,15 @@
 <p>Click <a href="/login">here</a> to login to your account.</p> -->
 <ul>
     {% for allNote in allNotes %}
-    <li>
-        <h2>{{ allNote.title }}</h2>
-        <p>{{ allNote.content }}</p>
-    </li>
+    <article class="media content-section">
+        <div class="media-body">
+        <div class="article-metadata">
+            <small class="text-muted">{{ allNote.date_posted }}</small>
+        </div>
+        <h2><a class="article-title" href="#">{{ allNote.title }}</a></h2>
+        <p class="article-content">{{ allNote.content }}</p>
+        </div>
+    </article>
     {% endfor %}
 </ul>
 {% endblock %}
