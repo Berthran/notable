@@ -45,7 +45,7 @@ def login():
     ''' Handles user login '''
     # Create an instance of the login form
     form = LoginForm()
-    return render_template('login.html')
+    return render_template('login.html', title="Login", form=form)
 
 
 @app.route('/logout', strict_slashes=False)
