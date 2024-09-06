@@ -16,7 +16,7 @@ class User(db.Model):
     A user can have one or multiple notes.
     '''
 
-    userId = db.Column(db.Integer, prinary_key=True)
+    userId = db.Column(db.Integer, primary_key=True)
     firstName = db.Column(db.String(40), nullable=False)
     lastName = db.Column(db.String(40), nullable=False)
     email = db.Column(db.String(40), nullable=False)
@@ -24,7 +24,7 @@ class User(db.Model):
     notes = db.relationship('Note', backref='user', lazy=True)
 
     def __repr__(self):
-        return f'User [{self.firstName} {self.lastName}] {self.email}>'
+        return f"User('{self.firstName} {self.lastName}' '{self.email}'"
 
 
 

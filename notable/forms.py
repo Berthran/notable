@@ -5,6 +5,7 @@ Handle the forms for registration, login, and new note creation.
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField, BooleanField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
+from notable.models import User
 
 
 class RegistrationForm(FlaskForm):
