@@ -43,6 +43,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .content-section {
+  width: 50vh;
   background: #ffffff;
   padding: 10px 20px;
   border: 1px solid #dddddd;
