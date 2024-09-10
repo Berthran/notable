@@ -9,7 +9,7 @@ from flask_login import UserMixin
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id.userId))
+    return User.query.get(int(user_id))
 
 
 
@@ -23,15 +23,15 @@ class User(db.Model, UserMixin):
     A user can have one or multiple notes.
     '''
 
-    userId = db.Column(db.Integer, primary_key=True)
-    firstName = db.Column(db.String(40), nullable=False)
-    lastName = db.Column(db.String(40), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    firstname = db.Column(db.String(40), nullable=False)
+    lastname = db.Column(db.String(40), nullable=False)
     email = db.Column(db.String(40), unique=True, nullable=False)
     password = db.Column(db.String(40), nullable=False)
-    notes = db.relationship('Note', backref='user', lazy=True)
+    notes = db.relationship('Note', backref='author', lazy=True)
 
     def __repr__(self):
-        return f"User('{self.firstName} {self.lastName}' '{self.email}'"
+        return f"User('{self.firstname} {self.lastname}' '{self.email}'"
 
 
 
@@ -57,13 +57,13 @@ class Note(db.Model):
 
     The guidelines when added remain hidden until the user clicks on the guideline icon to view them.
     '''
-    noteId = db.Column(db.Integer, primary_key=True)
-    userId = db.Column(db.Integer, db.ForeignKey('user.userId'), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     title = db.Column(db.String(40), nullable=False)
     body = db.Column(db.Text, nullable=False)
     created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    tasks = db.relationship('Task', backref='note', lazy=True)
-    reports = db.relationship('Report', backref='note', lazy=True)
+    tasks = db.relationship('Task', backref='owner', lazy=True)
+    reports = db.relationship('Report', backref='owner', lazy=True)
 
     def __repr__(self):
         return f'Note [{self.title}] {self.body}>'
@@ -80,13 +80,13 @@ class Task(db.Model):
 
 
     '''
-    taskId = db.Column(db.Integer, primary_key=True)
-    noteId = db.Column(db.Integer, db.ForeignKey('note.noteId'), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    note_id = db.Column(db.Integer, db.ForeignKey('note.id'), nullable=False)
     title = db.Column(db.String(40), nullable=False)
     body = db.Column(db.Text, nullable=False)
     done = db.Column(db.Boolean, nullable=False, default=False)
     progress = db.Column(db.Integer, nullable=False, default=0)
-    subtasks = db.relationship('Subtask', backref='task', lazy=True)
+    subtasks = db.relationship('Subtask', backref='parent', lazy=True)
     guidelines = db.relationship('Guideline', backref='task', lazy=True)
 
 
@@ -102,8 +102,8 @@ class Subtask(db.Model):
     A subtask is a task that is part of a task. A subtask is a task that is done to complete the main task.
     A subtask is associated with a task.
     '''
-    subtaskId = db.Column(db.Integer, primary_key=True)
-    taskId = db.Column(db.Integer, db.ForeignKey('task.taskId'), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    task_id = db.Column(db.Integer, db.ForeignKey('task.id'), nullable=False)
     title = db.Column(db.String(40), nullable=False)
     body = db.Column(db.Text, nullable=False)
     done = db.Column(db.Boolean, nullable=False, default=False)
@@ -135,8 +135,8 @@ class Guideline(db.Model):
     - Add a progress tracker for the task (a percentage of the task done): HOW FAR ALONG ARE YOU IN COMPLETING THIS TASK?
     - Add a timer for the task (a countdown timer to complete the task): HOW MUCH TIME DO YOU HAVE LEFT TO COMPLETE THIS TASK?
     '''
-    guidelineId = db.Column(db.Integer, primary_key=True)
-    taskId = db.Column(db.Integer, db.ForeignKey('task.taskId'), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    task_id = db.Column(db.Integer, db.ForeignKey('task.id'), nullable=False)
     key = db.Column(db.String(40), nullable=False)
     value = db.Column(db.String(40), nullable=False)
     purpose = db.Column(db.String(40), nullable=True)
@@ -169,12 +169,12 @@ class Report(db.Model):
 
     A report is associated with a note.
     '''
-    reportId = db.Column(db.Integer, primary_key=True)
-    noteId = db.Column(db.Integer, db.ForeignKey('note.noteId'), nullable=False)
-    noteTitle = db.Column(db.String(40), nullable=False)
-    taskTitle = db.Column(db.String(40), nullable=False)
-    taskCompletionScore = db.Column(db.Integer, nullable=False)
-    overallCompletionScore = db.Column(db.Integer, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    note_id = db.Column(db.Integer, db.ForeignKey('note.id'), nullable=False)
+    note_title = db.Column(db.String(40), nullable=False)
+    task_title = db.Column(db.String(40), nullable=False)
+    task_completion_score = db.Column(db.Integer, nullable=False)
+    overall_completion_Score = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.Text, nullable=False)
 
     def __repr__(self):
