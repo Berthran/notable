@@ -5,6 +5,7 @@ from flask import Flask, render_template, flash, redirect, url_for
 from notable.forms import RegistrationForm, LoginForm, NoteForm
 from notable import app, db, bcrypt
 from notable.models import User
+from flask_login import login_user
 
 allNotes = [
     {
@@ -50,7 +51,6 @@ allNotes = [
 def home():
     ''' Shows the homepage '''
     return render_template('home.html', allNotes=allNotes, title="Home")
-    # return 'Home page'
 
 
 @app.route('/register', methods=['GET', 'POST'], strict_slashes=False)
@@ -61,8 +61,8 @@ def register():
 
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(firstName=form.firstName.data,
-                lastName=form.lastName.data,
+        user = User(firstname=form.firstName.data,
+                lastname=form.lastName.data,
                 email=form.email.data,
                 password=hashed_password)
         db.session.add(user)
@@ -80,11 +80,13 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        if form.email.data == 'admin@blog.com' and form.password.data == "password":
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.data.remember)
             flash(f'You have been logged in!', 'success')
             return redirect(url_for('home'))
         else:
-            flash('Login unsuccessful. Check username and password', 'danger')
+            flash('Login unsuccessful. Check email and password', 'danger')
     return render_template('login.html', title="Login", form=form)
 
 
