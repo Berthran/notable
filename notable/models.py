@@ -2,11 +2,18 @@
 The class objects for the User and the Notes
 '''
 
-from notable import db
-import datetime
+from datetime import datetime
+from notable import db, login_manager
+from flask_login import UserMixin
 
 
-class User(db.Model):
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id.userId))
+
+
+
+class User(db.Model, UserMixin):
     '''
     A user object.
 
@@ -54,7 +61,7 @@ class Note(db.Model):
     userId = db.Column(db.Integer, db.ForeignKey('user.userId'), nullable=False)
     title = db.Column(db.String(40), nullable=False)
     body = db.Column(db.Text, nullable=False)
-    created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+    created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     tasks = db.relationship('Task', backref='note', lazy=True)
     reports = db.relationship('Report', backref='note', lazy=True)
 
