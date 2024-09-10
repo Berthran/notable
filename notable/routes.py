@@ -5,7 +5,7 @@ from flask import Flask, render_template, flash, redirect, url_for
 from notable.forms import RegistrationForm, LoginForm, NoteForm
 from notable import app, db, bcrypt
 from notable.models import User
-from flask_login import login_user
+from flask_login import login_user, current_user
 
 allNotes = [
     {
@@ -57,6 +57,9 @@ def home():
 def register():
     ''' Handles user registration '''
     # Create an instance of the registration form
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    
     form = RegistrationForm()
 
     if form.validate_on_submit():
@@ -77,12 +80,16 @@ def register():
 def login():
     ''' Handles user login '''
     # Create an instance of the login form
+
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    
     form = LoginForm()
 
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.data.remember)
+            login_user(user, remember=form.remember.data)
             return redirect(url_for('home'))
         else:
             flash('Login unsuccessful. Check email and password', 'danger')
