@@ -3,10 +3,29 @@ Handles the different component routes
 '''
 from flask import Flask, render_template, flash, redirect, url_for
 from notable.forms import RegistrationForm, LoginForm, NoteForm
-from notable import app
+from notable import app, db, bcrypt
+from notable.models import User
 
 allNotes = [
     {
+        'id': 1,
+        'title': 'First Note',
+        'content': "I decree by the word of the Lord that I am no debtor to the flesh to walk after the flesh. Body you are not my master neither am I your slave therefore by the Spirit of the Lord I decree your deeds mortified and destroyed in me. (Rom 8:12,13). \nHave mercy on me oh Lord and bring to a halt every activity distracting me from the path you want me to follow.",
+        'date_posted': 'April 20, 2021'
+    },
+    {
+        'id': 2,
+        'title': 'Second Note',
+        'content': 'This is the second note',
+        'date_posted': 'April 21, 2021'
+    },
+    {
+        'id': 3,
+        'title': 'Third Note',
+        'content': 'This is the third note',
+        'date_posted': 'April 22, 2021'
+    },
+     {
         'id': 1,
         'title': 'First Note',
         'content': "I decree by the word of the Lord that I am no debtor to the flesh to walk after the flesh. Body you are not my master neither am I your slave therefore by the Spirit of the Lord I decree your deeds mortified and destroyed in me. (Rom 8:12,13). \nHave mercy on me oh Lord and bring to a halt every activity distracting me from the path you want me to follow.",
@@ -28,7 +47,6 @@ allNotes = [
 
 @app.route('/', strict_slashes=False)
 @app.route('/home', strict_slashes=False)
-# @loginrequired
 def home():
     ''' Shows the homepage '''
     return render_template('home.html', allNotes=allNotes, title="Home")
@@ -42,8 +60,15 @@ def register():
     form = RegistrationForm()
 
     if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(firstName=form.firstName.data,
+                lastName=form.lastName.data,
+                email=form.email.data,
+                password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
         flash(f'Account created for {form.email.data}', 'success')
-        return redirect(url_for('home'))
+        return redirect(url_for('login'))
     return render_template('register.html', title="Register", form=form)
     
 
@@ -53,6 +78,13 @@ def login():
     ''' Handles user login '''
     # Create an instance of the login form
     form = LoginForm()
+
+    if form.validate_on_submit():
+        if form.email.data == 'admin@blog.com' and form.password.data == "password":
+            flash(f'You have been logged in!', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash('Login unsuccessful. Check username and password', 'danger')
     return render_template('login.html', title="Login", form=form)
 
 
