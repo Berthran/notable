@@ -4,9 +4,15 @@
 <ul class="notelist">
     {% for allNote in allNotes %}
     <article class="media content-section">
-        <div class="media-body">
-        <h3><a class="article-title" href="#">{{ allNote.title }}</a></h3>
-        <p class="article-content">{{ allNote.content }}</p>
+            <div class="media-body">
+                {% if current_user.is_authenticated %}
+                <div class="article-metadata">
+                    <small class="text-muted"> {{ allNote.created_at.strftime('%Y-%m-%d') }} - </small>
+                    <small class="text-muted"> Last edited {{ allNote.updated_at.strftime('%a, %b %d') }}</small>
+                </div>
+                {% endif %}
+            <h3><a class="article-title" href="#">{{ allNote.title }}</a></h3>
+            <p class="article-content">{{ allNote.body }}</p>
         </div>
     </article>
     {% endfor %}
