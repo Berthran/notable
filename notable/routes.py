@@ -109,7 +109,8 @@ def logout():
 @login_required
 def account():
     ''' Handles user profile '''
-    return render_template('account.html', title="Account")
+    image_file = url_for('static', filename=f'/profile_pics/{current_user.image}')
+    return render_template('account.html', title="Account", image_file=image_file)
 
 
 @app.route('/notes', strict_slashes=False)
