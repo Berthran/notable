@@ -7,45 +7,21 @@ from PIL import Image
 from flask import Flask, render_template, flash, redirect, url_for, request
 from notable.forms import RegistrationForm, LoginForm, NoteForm, UpdateAccountForm
 from notable import app, db, bcrypt
-from notable.models import User
+from notable.models import User, Note
 from flask_login import login_user, current_user, logout_user, login_required
 
-allNotes = [
+demoNotes = [
     {
         'id': 1,
-        'title': 'First Note',
-        'content': "I decree by the word of the Lord that I am no debtor to the flesh to walk after the flesh. Body you are not my master neither am I your slave therefore by the Spirit of the Lord I decree your deeds mortified and destroyed in me. (Rom 8:12,13). \nHave mercy on me oh Lord and bring to a halt every activity distracting me from the path you want me to follow.",
+        'title': 'Demo Note 1',
+        'body': "I decree by the word of the Lord that I am no debtor to the flesh to walk after the flesh. Body you are not my master neither am I your slave therefore by the Spirit of the Lord I decree your deeds mortified and destroyed in me. (Rom 8:12,13). \nHave mercy on me oh Lord and bring to a halt every activity distracting me from the path you want me to follow.",
         'date_posted': 'April 20, 2021'
     },
     {
         'id': 2,
-        'title': 'Second Note',
-        'content': 'This is the second note',
+        'title': 'Demo Note 2',
+        'body': 'This is the second note',
         'date_posted': 'April 21, 2021'
-    },
-    {
-        'id': 3,
-        'title': 'Third Note',
-        'content': 'This is the third note',
-        'date_posted': 'April 22, 2021'
-    },
-     {
-        'id': 1,
-        'title': 'First Note',
-        'content': "I decree by the word of the Lord that I am no debtor to the flesh to walk after the flesh. Body you are not my master neither am I your slave therefore by the Spirit of the Lord I decree your deeds mortified and destroyed in me. (Rom 8:12,13). \nHave mercy on me oh Lord and bring to a halt every activity distracting me from the path you want me to follow.",
-        'date_posted': 'April 20, 2021'
-    },
-    {
-        'id': 2,
-        'title': 'Second Note',
-        'content': 'This is the second note',
-        'date_posted': 'April 21, 2021'
-    },
-    {
-        'id': 3,
-        'title': 'Third Note',
-        'content': 'This is the third note',
-        'date_posted': 'April 22, 2021'
     }
 ]
 
@@ -53,7 +29,20 @@ allNotes = [
 @app.route('/home', strict_slashes=False)
 def home():
     ''' Shows the homepage '''
-    return render_template('home.html', allNotes=allNotes, title="Home")
+    # Get notes created by the user
+    if current_user.is_authenticated:
+        notes = Note.query.filter_by(user_id=current_user.id)
+    else:
+        notes = demoNotes
+    return render_template('home.html', allNotes=notes, title="Home")
+
+
+def add_demo_notes(user):
+    # Add demo notes for new users
+    for demoNote in demoNotes:
+        note = Note(title=demoNote['title'], body=demoNote['body'], author=user)
+        db.session.add(note)
+        db.session.commit()
 
 
 @app.route('/register', methods=['GET', 'POST'], strict_slashes=False)
@@ -73,6 +62,7 @@ def register():
                 password=hashed_password)
         db.session.add(user)
         db.session.commit()
+        add_demo_notes(user)
         flash(f'Account created for {form.email.data}', 'success')
         return redirect(url_for('login'))
     return render_template('register.html', title="Register", form=form)
@@ -159,10 +149,21 @@ def notes():
     return 'All Notes page'
 
 
-@app.route('/new_note', strict_slashes=False) # For the create note button
+@app.route('/note/new', methods=['GET', 'POST'], strict_slashes=False) # For the create note button
+@login_required
 def new_note():
     ''' Handles new note creation '''
-    return 'New Note page'
+    form = NoteForm()
+
+    if form.validate_on_submit():
+        note = Note(title=form.title.data,
+                    body=form.content.data,
+                    author=current_user)
+        db.session.add(note)
+        db.session.commit()
+        flash('Note created!', 'success')
+        return redirect(url_for('home'))
+    return render_template('create_note.html', title='New Post', form=form)
 
 @app.route('/note/<int:note_id>/<int:task_id>/guidelines', strict_slashes=False)
 def guidelines(note_id, task_id):
