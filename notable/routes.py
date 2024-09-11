@@ -5,7 +5,7 @@ from flask import Flask, render_template, flash, redirect, url_for
 from notable.forms import RegistrationForm, LoginForm, NoteForm
 from notable import app, db, bcrypt
 from notable.models import User
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, current_user, logout_user, login_required
 
 allNotes = [
     {
@@ -103,7 +103,9 @@ def logout():
     return redirect(url_for('home'))
 
 
+
 @app.route('/account', strict_slashes=False)
+@login_required
 def account():
     ''' Handles user profile '''
     return render_template('account.html', title="Account")
