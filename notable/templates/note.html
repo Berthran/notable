@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+    <article class="media content-section">
+
+            <div class="media-body">
+                <div class="article-metadata">
+                    <small class="text-muted"> Last edited on {{ note.updated_at.strftime('%a, %b %d %H:%M %p') }}</small>
+                </div>
+            <h2 class="article-title" >{{ note.title }}</h2>
+            <p class="article-content">{{ note.body }}</p>
+        </div>
+    </article>
+{% endblock %}
