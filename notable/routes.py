@@ -2,7 +2,7 @@
 Handles the different component routes
 '''
 from flask import Flask, render_template, flash, redirect, url_for, request
-from notable.forms import RegistrationForm, LoginForm, NoteForm
+from notable.forms import RegistrationForm, LoginForm, NoteForm, UpdateAccountForm
 from notable import app, db, bcrypt
 from notable.models import User
 from flask_login import login_user, current_user, logout_user, login_required
@@ -105,12 +105,25 @@ def logout():
 
 
 
-@app.route('/account', strict_slashes=False)
+@app.route('/account', methods=['GET', 'POST'], strict_slashes=False)
 @login_required
 def account():
     ''' Handles user profile '''
+    form = UpdateAccountForm()
+
+    if form.validate_on_submit():
+        current_user.firstname = form.firstName.data
+        current_user.lastname = form.lastName.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash(f'Changes updated!', 'success')
+        return redirect(url_for('account'))
+    elif request.method == 'GET':
+        form.firstName.data = current_user.firstname
+        form.lastName.data = current_user.lastname
+        form.email.data = current_user.email
     image_file = url_for('static', filename=f'/profile_pics/{current_user.image}')
-    return render_template('account.html', title="Account", image_file=image_file)
+    return render_template('account.html', title="Account", image_file=image_file, form=form)
 
 
 @app.route('/notes', strict_slashes=False)
