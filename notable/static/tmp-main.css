@@ -1,0 +1,143 @@
+body {
+  background: #fafafa;
+  color: #333333;
+  /* height: 100vh; */
+  /* display: grid; */
+  /* justify-content: center; */
+  align-items: center;
+  margin-top: 5rem;
+  height: 200vh; /* Makes the page scrollable */
+  /* border: 5px solid #5f788a; */
+
+}
+
+.title {
+  text-align: center;
+  color: #428bca;
+}
+.notearea {
+  max-width: 50%;
+  margin: 0 auto;
+  /* border-left: 1px solid #5f788a;
+  border-right: 1px solid #5f788a; */
+}
+
+.notelist {
+  margin-top: 80px;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #444444;
+}
+
+.bg-steel {
+  background-color: #5f788a;
+}
+
+.site-header .navbar-nav .nav-link {
+  color: #cbd5db;
+}
+
+.site-header .navbar-nav .nav-link:hover {
+  color: #ffffff;
+}
+
+.site-header .navbar-nav .nav-link.active {
+  font-weight: 500;
+}
+
+
+.content-section {
+  /* width: 50vh; */
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 9px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+
+}
+
+.article-title {
+  color: #444444;
+}
+
+a.article-title:hover {
+  color: #428bca;
+  text-decoration: none;
+}
+
+.article-title {
+  text-decoration: none; /* Remove underline from links */
+}
+
+.article-content {
+  white-space: pre-line;
+}
+
+.article-img {
+  height: 65px;
+  width: 65px;
+  margin-right: 16px;
+}
+
+.article-metadata {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3
+}
+
+.article-metadata a:hover {
+  color: #333;
+  text-decoration: none;
+}
+
+.article-svg {
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+}
+
+.account-img {
+  height: 125px;
+  width: 125px;
+  margin-right: 20px;
+  margin-bottom: 16px;
+}
+
+.account-heading {
+  font-size: 2.5rem;
+}
+
+.submit {
+  margin: 10px auto; /* Increase the space around the button */
+  text-align: center; /* Center the button */
+}
+
+/* Plus button styling */
+.plus-button {
+  position: fixed;
+  bottom: 20px; /* Distance from the bottom */
+  left: 50%; /* Center the button horizontally */
+  transform: translateX(-50%); /* Adjust to center precisely */
+  display: inline-block;
+  padding: 15px 20px;
+  background-color: #28a745; /* Green background */
+  color: white;
+  font-size: 24px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px; /* Border radius set to 5 pixels */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.3s ease; /* Smooth fade-in/fade-out */
+}
+
+.plus-button:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
+.plus-button.hidden {
+  opacity: 0; /* Hides the button */
+  pointer-events: none; /* Prevents clicking when hidden */
+}
