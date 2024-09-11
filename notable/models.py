@@ -28,6 +28,7 @@ class User(db.Model, UserMixin):
     lastname = db.Column(db.String(40), nullable=False)
     email = db.Column(db.String(40), unique=True, nullable=False)
     password = db.Column(db.String(40), nullable=False)
+    image = db.Column(db.String(60), nullable=False, default="default.jpg")
     notes = db.relationship('Note', backref='author', lazy=True)
 
     def __repr__(self):
