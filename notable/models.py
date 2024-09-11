@@ -62,12 +62,13 @@ class Note(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     title = db.Column(db.String(40), nullable=False)
     body = db.Column(db.Text, nullable=False)
-    created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     tasks = db.relationship('Task', backref='owner', lazy=True)
     reports = db.relationship('Report', backref='owner', lazy=True)
 
     def __repr__(self):
-        return f'Note [{self.title}] {self.body}>'
+        return f'[{self.title}]: {self.body}\n'
 
 
 
