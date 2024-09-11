@@ -1,6 +1,9 @@
 '''
 Handles the different component routes
 '''
+import os
+import secrets
+from PIL import Image
 from flask import Flask, render_template, flash, redirect, url_for, request
 from notable.forms import RegistrationForm, LoginForm, NoteForm, UpdateAccountForm
 from notable import app, db, bcrypt
@@ -105,6 +108,26 @@ def logout():
 
 
 
+def save_picture(form_picture):
+    ''' Save uploaded image to database '''
+    # Generate a random string to store file name
+    random_hex = secrets.token_hex(8)
+    # Get the file extension
+    _, f_ext = os.path.splitext(form_picture.filename)
+    # Create a custom picture file name
+    picture_fn = random_hex + f_ext
+    # Get the absolute path to store the picture in
+    picture_path =  os.path.join(app.root_path, 'static/profile_pics',  picture_fn)
+    # Resize picture
+    output_size = (125, 125)
+    i = Image.open(form_picture)
+    i.thumbnail(output_size)
+    # Save the picture
+    i.save(picture_path)
+    return (picture_fn)
+    
+
+
 @app.route('/account', methods=['GET', 'POST'], strict_slashes=False)
 @login_required
 def account():
@@ -112,6 +135,10 @@ def account():
     form = UpdateAccountForm()
 
     if form.validate_on_submit():
+        if form.picture.data:
+            picture_file = save_picture(form.picture.data)
+            current_user.image = picture_file
+
         current_user.firstname = form.firstName.data
         current_user.lastname = form.lastName.data
         current_user.email = form.email.data
