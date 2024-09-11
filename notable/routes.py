@@ -103,10 +103,10 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route('/profile', strict_slashes=False)
-def profile():
+@app.route('/account', strict_slashes=False)
+def account():
     ''' Handles user profile '''
-    return 'Profile page'
+    return render_template('account.html', title="Account")
 
 
 @app.route('/notes', strict_slashes=False)
@@ -170,11 +170,6 @@ def delete_report(report_id):
     ''' Handles report delete '''
     return 'Delete Report page'
 
-
-# @app.note('/profile/edit', strict_slashes=False)
-# def edit_profile():
-#     ''' Handles user profile edit '''
-#     return 'Edit Profile page'
 
 # @app.route('/profile/delete', strict_slashes=False)
 # def delete_profile():
