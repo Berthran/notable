@@ -4,7 +4,8 @@ Handles the different component routes
 import os
 import secrets
 from PIL import Image
-from flask import Flask, render_template, flash, redirect, url_for, request
+from datetime import datetime
+from flask import Flask, render_template, flash, redirect, url_for, request, abort
 from notable.forms import RegistrationForm, LoginForm, NoteForm, UpdateAccountForm
 from notable import app, db, bcrypt
 from notable.models import User, Note
@@ -27,14 +28,21 @@ demoNotes = [
 
 @app.route('/', strict_slashes=False)
 @app.route('/home', strict_slashes=False)
+@login_required
 def home():
     ''' Shows the homepage '''
     # Get notes created by the user
-    if current_user.is_authenticated:
-        notes = Note.query.filter_by(user_id=current_user.id)
-    else:
-        notes = demoNotes
-    return render_template('home.html', allNotes=notes, title="Home")
+    # if current_user.is_authenticated:
+    #     notes = Note.query.filter_by(user_id=current_user.id)
+    # else:
+    #     notes = demoNotes
+    notes = Note.query.filter_by(user_id=current_user.id)
+    return render_template('home.html', notes=notes, title="Home")
+
+@app.route('/notes', strict_slashes=False)
+def notes():
+    ''' Handles all notes '''
+    return 'All Notes page'
 
 
 def add_demo_notes(user):
@@ -143,12 +151,6 @@ def account():
     return render_template('account.html', title="Account", image_file=image_file, form=form)
 
 
-@app.route('/notes', strict_slashes=False)
-def notes():
-    ''' Handles all notes '''
-    return 'All Notes page'
-
-
 @app.route('/note/new', methods=['GET', 'POST'], strict_slashes=False) # For the create note button
 @login_required
 def new_note():
@@ -161,26 +163,50 @@ def new_note():
                     author=current_user)
         db.session.add(note)
         db.session.commit()
-        flash('Note created!', 'success')
+        # flash('Note created!', 'success')
         return redirect(url_for('home'))
-    return render_template('create_note.html', title='New Post', form=form)
+    return render_template('create_note.html', title='New Note',
+                           form=form, legend='New Note')
+
+
+@app.route('/note/<int:note_id>', strict_slashes=False) # Tap on note title to view. Disables automatic edit
+def view_note(note_id):
+    ''' Handles note view '''
+    note = Note.query.get_or_404(note_id)
+    return render_template('note.html', title=note.title, note=note)
+
+
+@app.route('/note/<int:note_id>/edit', methods= ['GET', 'POST'], strict_slashes=False) # Click on edit icon
+def edit_note(note_id):
+    ''' Handles note edit '''
+    note = Note.query.get_or_404(note_id)
+    # if note.author != current_user:
+    #     abort(403)
+    
+    form = NoteForm()
+    if form.validate_on_submit():
+        note.title = form.title.data
+        note.body = form.content.data
+        note.updated_at = datetime.utcnow()
+        db.session.commit()
+        return redirect(url_for('view_note', note_id=note.id))
+    elif request.method == 'GET':
+        form.title.data = note.title
+        form.content.data = note.body
+    return render_template('create_note.html', title='Edit Note',
+                           form=form, legend="Update Note")
+
+
+# --------------
+# No automatic editing on viewing a note
 
 @app.route('/note/<int:note_id>/<int:task_id>/guidelines', strict_slashes=False)
 def guidelines(note_id, task_id):
     ''' Handles the guidelines view'''
     return ' Guideline Page'
 
-# No automatic editing on viewing a note
-@app.route('/note/<int:note_id>', strict_slashes=False) # Tap on note to view. Disables automatic edit
-def view_note(note_id):
-    ''' Handles note view '''
-    return 'View Note page'
 
 
-@app.route('/note/<int:note_id>/edit', strict_slashes=False) # Click on edit icon
-def edit_note(note_id):
-    ''' Handles note edit '''
-    return 'Edit Note page'
 
 
 @app.route('/note/<int:note_id>/delete', strict_slashes=False)
