@@ -3,6 +3,7 @@ Handle the forms for registration, login, and new note creation.
 '''
 
 from flask_wtf import FlaskForm
+from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField, BooleanField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
 from notable.models import User
@@ -51,6 +52,26 @@ class NoteForm(FlaskForm):
     save = SubmitField('Save')
     
 
-    
+class UpdateAccountForm(FlaskForm):
+    '''
+    Form for updating user profile
+    '''
+    firstName = StringField('First name', validators=[DataRequired(), Length(min=2, max=20)])
+    lastName = StringField('Last name', validators=[DataRequired(), Length(min=2, max=20)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Update')
+
+
+    # Validatate the email
+    def validate_email(self, email):
+        '''
+        Validates the user provided email
+        '''
+        # Email must be unique
+        if email.data != current_user.email:
+            user = User.query.filter_by(email=email.data).first()
+            if user:
+                raise ValidationError('An account witht this email already exists. Login or use a different email.')
+            
 
 
