@@ -1,25 +1,7 @@
 body {
   background: #fafafa;
   color: #333333;
-  /* height: 100vh; */
-  /* display: grid; */
-  /* justify-content: center; */
-  align-items: center;
   margin-top: 5rem;
-  /* border: 5px solid #5f788a; */
-
-}
-
-.notearea {
-  max-width: 50%;
-  margin: 0 auto;
-  /* border-left: 1px solid #5f788a;
-  border-right: 1px solid #5f788a; */
-}
-
-.notelist {
-  margin-top: 80px;
-  padding: 0;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -43,14 +25,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .content-section {
-  width: 50vh;
   background: #ffffff;
   padding: 10px 20px;
   border: 1px solid #dddddd;
-  border-radius: 9px;
-  margin: 0 auto;
+  border-radius: 3px;
   margin-bottom: 20px;
-
 }
 
 .article-title {
@@ -60,10 +39,6 @@ h1, h2, h3, h4, h5, h6 {
 a.article-title:hover {
   color: #428bca;
   text-decoration: none;
-}
-
-.article-title {
-  text-decoration: none; /* Remove underline from links */
 }
 
 .article-content {
@@ -101,10 +76,4 @@ a.article-title:hover {
 }
 
 .account-heading {
-  font-size: 2.5rem;
-}
-
-.submit {
-  margin: 10px auto; /* Increase the space around the button */
-  text-align: center; /* Center the button */
-}
+  font-size: 2.5re
