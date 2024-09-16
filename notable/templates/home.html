@@ -7,14 +7,27 @@
 
             <div class="media-body">
                 {% if current_user.is_authenticated %}
-                <div class="article-metadata">
+                <div class="article-metadata d-flex justify-content-between  align-items-center">
                     <small class="text-muted"> {{ note.created_at.strftime('%Y-%m-%d') }} </small>
+                    <small class="ml-auto"><a href="{{ url_for('note_report', note_id=note.id) }}"> view report </a></small>
                 </div>
                 {% endif %}
             <h3><a class="article-title" href="{{ url_for('view_note', note_id=note.id) }}">{{ note.title }}</a></h3>
             <p class="article-content">{{ note.body }}</p>
         </div>
     </article>
+    {% endfor %}
+
+    <!-- Add page numbers for pagination -->
+    {% for page_num in notes.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2 ) %}
+        {% if page_num %}
+            {% if notes.page == page_num %}
+                <a class="btn btn--info mb-4" href="{{ url_for('home', page=page_num) }}"> {{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('home', page=page_num) }}"> {{ page_num }}</a>
+            {% endif %}
+        {% else %}
+        {% endif %}
     {% endfor %}
 </ul>
 {% endblock %}

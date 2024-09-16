@@ -5,9 +5,38 @@
             <div class="media-body">
                 <div class="article-metadata">
                     <small class="text-muted"> Last edited on {{ note.updated_at.strftime('%a, %b %d %H:%M %p') }}</small>
+                    <!-- Add update and delete links -->
+                     <div>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('edit_note', note_id=note.id) }}"> Update </a>
+                        <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal"> Delete </button>
+                     </div>
                 </div>
             <h2 class="article-title" >{{ note.title }}</h2>
             <p class="article-content">{{ note.body }}</p>
         </div>
     </article>
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Delete Note</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <!-- <div class="modal-body">
+            ...
+            </div> -->
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+             <form action="{{ url_for('delete_note', note_id=note.id) }}" method="POST">
+                <input class="btn btn-danger" type="submit" value="Delete">
+             </form>
+            </div>
+        </div>
+        </div>
+    </div>
 {% endblock %}
