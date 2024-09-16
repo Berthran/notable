@@ -36,7 +36,10 @@ def home():
     #     notes = Note.query.filter_by(user_id=current_user.id)
     # else:
     #     notes = demoNotes
-    notes = Note.query.filter_by(user_id=current_user.id)
+    page = request.args.get('page', 1, type=int)
+    notes = Note.query.filter_by(author=current_user)\
+        .order_by(Note.created_at.desc())\
+        .paginate(page=page, per_page=5)
     return render_template('home.html', notes=notes, title="Home")
 
 @app.route('/notes', strict_slashes=False)
@@ -76,7 +79,6 @@ def register():
     return render_template('register.html', title="Register", form=form)
     
 
-
 @app.route('/login', methods=['GET', 'POST'], strict_slashes=False)
 def login():
     ''' Handles user login '''
@@ -105,7 +107,6 @@ def logout():
     return redirect(url_for('home'))
 
 
-
 def save_picture(form_picture):
     ''' Save uploaded image to database '''
     # Generate a random string to store file name
@@ -124,7 +125,6 @@ def save_picture(form_picture):
     i.save(picture_path)
     return (picture_fn)
     
-
 
 @app.route('/account', methods=['GET', 'POST'], strict_slashes=False)
 @login_required
@@ -177,6 +177,7 @@ def view_note(note_id):
 
 
 @app.route('/note/<int:note_id>/edit', methods= ['GET', 'POST'], strict_slashes=False) # Click on edit icon
+@login_required
 def edit_note(note_id):
     ''' Handles note edit '''
     note = Note.query.get_or_404(note_id)
@@ -197,28 +198,34 @@ def edit_note(note_id):
                            form=form, legend="Update Note")
 
 
-# --------------
-# No automatic editing on viewing a note
+@app.route('/note/<int:note_id>/delete', methods= ['POST'], strict_slashes=False)
+@login_required
+def delete_note(note_id):
+    ''' Handles note delete '''
+    note = Note.query.get_or_404(note_id)
+    db.session.delete(note)
+    db.session.commit()
+    flash(f"Successfully deleted!", 'success')
+    return redirect(url_for('home'))
+
+
+@app.route('/note/<int:note_id>/report', strict_slashes=False)
+def note_report(note_id):
+    ''' Handles note report '''
+    page = request.args.get('page', 1, type=int)
+    notes = Note.query.filter_by(author=current_user)\
+        .order_by(Note.created_at.desc())\
+        .paginate(page=page, per_page=5)
+    return render_template('note_report.html', notes=notes)
+
+
+# -------------- BREAK ---------------- #
+
 
 @app.route('/note/<int:note_id>/<int:task_id>/guidelines', strict_slashes=False)
 def guidelines(note_id, task_id):
     ''' Handles the guidelines view'''
     return ' Guideline Page'
-
-
-
-
-
-@app.route('/note/<int:note_id>/delete', strict_slashes=False)
-def delete_note(note_id):
-    ''' Handles note delete '''
-    return 'Delete Note page'
-
-
-@app.route('/note/<int:note_id>/report', strict_slashes=False)
-def report_note(note_id):
-    ''' Handles note report '''
-    return 'Report Note page'
 
 
 @app.route('/reports', strict_slashes=False)
