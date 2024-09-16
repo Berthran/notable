@@ -68,7 +68,7 @@ class Note(db.Model):
     reports = db.relationship('Report', backref='owner', lazy=True)
 
     def __repr__(self):
-        return f'[{self.title}]: {self.body}\n'
+        return f'[{self.title}]: {self.created_at}\n'
 
 
 
