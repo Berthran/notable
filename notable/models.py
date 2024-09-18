@@ -3,7 +3,8 @@ The class objects for the User and the Notes
 '''
 
 from datetime import datetime
-from notable import db, login_manager
+from itsdangerous import URLSafeTimedSerializer as Serializer
+from notable import db, login_manager, app
 from flask_login import UserMixin
 
 
@@ -66,6 +67,23 @@ class Note(db.Model):
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     tasks = db.relationship('Task', backref='owner', lazy=True)
     reports = db.relationship('Report', backref='owner', lazy=True)
+
+    def get_reset_token(self):
+        ''' Generate time sensitive token to ensure only a specific user
+        can reset password '''
+        s = Serializer(app.config['SECRET_KEY'])
+        return s.dumps({'user_id': self.id})
+    
+    @staticmethod
+    def verify_reset_token(token):
+        ''' Verifies a reset token '''
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token, max_age=1800)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
+        
 
     def __repr__(self):
         return f'[{self.title}]: {self.created_at}\n'
