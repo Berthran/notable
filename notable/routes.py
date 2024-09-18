@@ -6,7 +6,8 @@ import secrets
 from PIL import Image
 from datetime import datetime
 from flask import Flask, render_template, flash, redirect, url_for, request, abort
-from notable.forms import RegistrationForm, LoginForm, NoteForm, UpdateAccountForm
+from notable.forms import (RegistrationForm, LoginForm, NoteForm, UpdateAccountForm,
+                           RequestResetForm, ResetPasswordForm)
 from notable import app, db, bcrypt
 from notable.models import User, Note
 from flask_login import login_user, current_user, logout_user, login_required
@@ -219,6 +220,14 @@ def note_report(note_id):
     return render_template('note_report.html', notes=notes)
 
 
+@app.route('/reset_password', methods= ['GET', 'POST'], strict_slashes=False)
+def reset_request():
+    ''' Handles password reset '''
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    form = RequestResetForm()
+    return render_template('reset_request.html', title='Reset Password', form=form)
 # -------------- BREAK ---------------- #
 
 
