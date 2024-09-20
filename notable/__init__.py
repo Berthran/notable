@@ -37,3 +37,7 @@ mail = Mail(app)
 from notable.users.routes import users
 from notable.notes.routes import notes
 from notable.main.routes import main
+
+app.register_blueprint(users)
+app.register_blueprint(notes)
+app.register_blueprint(main)
