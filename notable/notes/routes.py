@@ -30,6 +30,8 @@ def new_note():
 def view_note(note_id):
     ''' Handles note view '''
     note = Note.query.get_or_404(note_id)
+    if note.author != current_user:
+        abort(403)
     return render_template('note.html', title=note.title, note=note)
 
 
@@ -38,8 +40,8 @@ def view_note(note_id):
 def edit_note(note_id):
     ''' Handles note edit '''
     note = Note.query.get_or_404(note_id)
-    # if note.author != current_user:
-    #     abort(403)
+    if note.author != current_user:
+        abort(403)
     
     form = NoteForm()
     if form.validate_on_submit():
@@ -60,6 +62,8 @@ def edit_note(note_id):
 def delete_note(note_id):
     ''' Handles note delete '''
     note = Note.query.get_or_404(note_id)
+    if note.author != current_user:
+        abort(403)
     db.session.delete(note)
     db.session.commit()
     flash(f"Successfully deleted!", 'success')

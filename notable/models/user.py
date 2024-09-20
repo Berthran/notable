@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask_login import UserMixin
-from notable import db, login_manager, app
+from flask import current_app
+from notable import db, login_manager
 from notable.models.note import Note
 from itsdangerous import URLSafeTimedSerializer as Serializer
 
@@ -32,13 +33,13 @@ class User(db.Model, UserMixin):
     def get_reset_token(self):
         ''' Generate time sensitive token to ensure only a specific user
         can reset password '''
-        s = Serializer(app.config['SECRET_KEY'])
+        s = Serializer(current_app.config['SECRET_KEY'])
         return s.dumps({'user_id': self.id})
     
     @staticmethod
     def verify_reset_token(token):
         ''' Verifies a reset token '''
-        s = Serializer(app.config['SECRET_KEY'])
+        s = Serializer(current_app.config['SECRET_KEY'])
         try:
             user_id = s.loads(token, max_age=1800)['user_id']
         except:
