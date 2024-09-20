@@ -32,6 +32,23 @@ class User(db.Model, UserMixin):
     image = db.Column(db.String(60), nullable=False, default="default.jpg")
     notes = db.relationship('Note', backref='author', lazy=True)
 
+    def get_reset_token(self):
+        ''' Generate time sensitive token to ensure only a specific user
+        can reset password '''
+        s = Serializer(app.config['SECRET_KEY'])
+        return s.dumps({'user_id': self.id})
+    
+    @staticmethod
+    def verify_reset_token(token):
+        ''' Verifies a reset token '''
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token, max_age=1800)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
+        
+
     def __repr__(self):
         return f"User('{self.firstname} {self.lastname}' '{self.email}'"
 
@@ -68,22 +85,6 @@ class Note(db.Model):
     tasks = db.relationship('Task', backref='owner', lazy=True)
     reports = db.relationship('Report', backref='owner', lazy=True)
 
-    def get_reset_token(self):
-        ''' Generate time sensitive token to ensure only a specific user
-        can reset password '''
-        s = Serializer(app.config['SECRET_KEY'])
-        return s.dumps({'user_id': self.id})
-    
-    @staticmethod
-    def verify_reset_token(token):
-        ''' Verifies a reset token '''
-        s = Serializer(app.config['SECRET_KEY'])
-        try:
-            user_id = s.loads(token, max_age=1800)['user_id']
-        except:
-            return None
-        return User.query.get(user_id)
-        
 
     def __repr__(self):
         return f'[{self.title}]: {self.created_at}\n'
