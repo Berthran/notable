@@ -34,6 +34,6 @@ mail = Mail(app)
 
 
 
-
-
-from notable import routes
+from notable.users.routes import users
+from notable.notes.routes import notes
+from notable.main.routes import main
