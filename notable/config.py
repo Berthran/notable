@@ -1,18 +1,14 @@
 import os
-from notable import app
-from flask_mail import Mail
+
 
 class Config:
     # Set the secret key
-    app.config['SECRET_KEY'] = "118d24d0a9c3a6d792d5c484e9cd076f"
-
+    SECRET_KEY = os.environ.get('SECRET_KEY')
     # Set the database URI
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-
+    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
     # Constants for Mail Server
-    app.config['MAIL_SERVER'] = "smtp.googlemail.com"
-    app.config['MAIL_PORT'] = 587
-    app.config['MAIL_USE_TLS'] = True
-    app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_USER')
-    app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASS')
-    mail = Mail(app)
+    MAIL_SERVER = "smtp.googlemail.com"
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = os.environ.get('EMAIL_USER')
+    MAIL_PASSWORD = os.environ.get('EMAIL_PASS')
