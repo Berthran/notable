@@ -58,13 +58,13 @@
 
                 <!-- Forgot password -->
                 <small class="text-muted ml-2">
-                    <a href="{{ url_for('reset_request') }}">Forgot Password?</a>
+                    <a href="{{ url_for('users.reset_request') }}">Forgot Password?</a>
                 </small>
             </div>
             </form>
         </div>
         <div class="border-top pt-4">
             <small class="text-muted">
-                Don't Have an Account? <a class="ml-2" href="{{ url_for('register') }}">Sign Up</a>
+                Don't Have an Account? <a class="ml-2" href="{{ url_for('users.register') }}">Sign Up</a>
         </div>
 {% endblock %}

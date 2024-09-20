@@ -1,14 +1,9 @@
-'''
-Handle the forms for registration, login, and new note creation.
-'''
-
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
+from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, BooleanField
-from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
-from notable.models import User
-
+from notable.models.user import User
 
 class RegistrationForm(FlaskForm):
     '''
@@ -66,16 +61,6 @@ class UpdateAccountForm(FlaskForm):
             if user:
                 raise ValidationError('An account witht this email already exists. Login or use a different email.')
             
-
-
-class NoteForm(FlaskForm):
-    '''
-    Form for creating new notes
-    '''
-    title = StringField("Title", validators=[DataRequired()])
-    content = TextAreaField("Content") # A user can create an empty note
-    save = SubmitField('Save')
-
 
 class RequestResetForm(FlaskForm):
     '''
